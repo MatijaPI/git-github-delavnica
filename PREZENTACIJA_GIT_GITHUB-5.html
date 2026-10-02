@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="sl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101a2b">
+  <title>Git + GitHub za ekipo ULRC · ERC 2027</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f5f7fb;
+      --muted: #b8c5d8;
+      --night: #101a2b;
+      --panel: #18263b;
+      --line: #30425b;
+      --lime: #b9ef78;
+      --orange: #ffae70;
+      --blue: #87caff;
+      --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100vh;
+      overflow: hidden;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse at 78% 13%, #243956 0, transparent 34%),
+        radial-gradient(ellipse at 8% 88%, #193b42 0, transparent 32%),
+        var(--night);
+    }
+    button { font: inherit; }
+    .presentation { min-height: 100vh; }
+    .slide {
+      display: none;
+      width: min(1180px, 100%);
+      height: 100vh;
+      min-height: 580px;
+      margin: auto;
+      padding: clamp(34px, 6vw, 76px) clamp(24px, 7vw, 92px) 104px;
+      overflow-y: auto;
+      flex-direction: column;
+      justify-content: safe center;
+      animation: arrive .24s ease-out;
+    }
+    .slide.active { display: flex; }
+    @keyframes arrive { from { opacity: .35; transform: translateY(7px); } to { opacity: 1; transform: none; } }
+    .eyebrow {
+      margin: 0 0 18px;
+      color: var(--lime);
+      font-size: .82rem;
+      font-weight: 750;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { max-width: 900px; margin-bottom: 18px; font-size: clamp(3.1rem, 8vw, 6.8rem); line-height: .98; letter-spacing: -.055em; flex-shrink: 0; }
+    h2 { max-width: 970px; margin-bottom: 25px; font-size: clamp(2.15rem, 5vw, 4.1rem); line-height: 1.04; letter-spacing: -.04em; flex-shrink: 0; }
+    h3 { margin-bottom: 12px; font-size: clamp(1.13rem, 2vw, 1.5rem); }
+    p, li { color: var(--muted); font-size: clamp(1rem, 1.8vw, 1.22rem); line-height: 1.55; }
+    strong { color: var(--ink); }
+    .lead { max-width: 780px; font-size: clamp(1.2rem, 2.3vw, 1.55rem); }
+    .accent { color: var(--lime); }
+    .blue { color: var(--blue); }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      width: fit-content;
+      padding: 9px 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: #17253a;
+      font-size: .91rem;
+    }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 10px 0 18px; }
+    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .card {
+      padding: 19px 21px;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: linear-gradient(145deg, rgba(29,45,67,.94), rgba(21,34,52,.94));
+    }
+    .card p { margin: 6px 0 0; font-size: 1rem; }
+    .card h3 { color: var(--ink); }
+    .card .number { display: block; margin-bottom: 8px; color: var(--lime); font: 700 1.9rem var(--mono); }
+    .steps { display: grid; gap: 11px; margin: 5px 0 18px; }
+    .step {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 14px 17px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: rgba(24,38,59,.84);
+    }
+    .step > div, .card { min-width: 0; }
+    .step .n { color: var(--lime); font: 700 1.2rem var(--mono); }
+    .step p { margin: 3px 0 0; font-size: 1rem; }
+    pre {
+      width: fit-content;
+      max-width: 100%;
+      margin: 10px 0 17px;
+      padding: 17px 20px;
+      overflow: visible;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      border: 1px solid #344863;
+      border-left: 4px solid var(--lime);
+      border-radius: 12px;
+      background: #0b1320;
+      color: #e6f0ff;
+      font: 500 clamp(.87rem, 1.5vw, 1.05rem)/1.65 var(--mono);
+      tab-size: 2;
+    }
+    code { color: var(--lime); font-family: var(--mono); }
+    .callout {
+      margin-top: 8px;
+      padding: 15px 18px;
+      border-left: 3px solid var(--orange);
+      border-radius: 0 10px 10px 0;
+      background: rgba(255,174,112,.09);
+      color: var(--muted);
+      line-height: 1.55;
+    }
+    .flow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 9px;
+      margin: 16px 0 21px;
+    }
+    .flow span {
+      padding: 10px 13px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel);
+      color: var(--ink);
+      font: 600 .95rem var(--mono);
+    }
+    .flow b { color: var(--lime); font-size: 1.15rem; }
+    .diagram { white-space: pre-wrap; overflow-wrap: anywhere; font: .95rem/1.7 var(--mono); color: #dce9f7; }
+    .center { align-items: center; text-align: center; }
+    .center h1, .center h2, .center p { max-width: 900px; }
+    .big-mark { margin: 12px 0; color: var(--lime); font-size: clamp(3rem, 9vw, 7rem); }
+    .toolbar {
+      position: fixed;
+      right: max(20px, calc((100vw - 1180px) / 2 + 22px));
+      bottom: 20px;
+      left: max(20px, calc((100vw - 1180px) / 2 + 22px));
+      z-index: 5;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      pointer-events: none;
+    }
+    .toolbar > * { pointer-events: auto; }
+    .controls { display: flex; gap: 8px; }
+    .controls button {
+      padding: 10px 14px;
+      border: 1px solid #40536b;
+      border-radius: 9px;
+      background: #17253a;
+      color: var(--ink);
+      cursor: pointer;
+    }
+    .controls button:hover, .controls button:focus-visible { border-color: var(--lime); outline: none; }
+    .progress-wrap { display: flex; align-items: center; gap: 11px; color: var(--muted); font: .85rem var(--mono); }
+    .progress { width: min(22vw, 190px); height: 5px; overflow: hidden; border-radius: 9px; background: #30425b; }
+    .progress i { display: block; width: 0; height: 100%; background: var(--lime); transition: width .2s; }
+    .hint { color: #91a3b9; font-size: .82rem; }
+    @media (max-width: 700px) {
+      .slide { min-height: 100vh; padding: 35px 22px 100px; justify-content: flex-start; }
+      .slide.center { justify-content: center; }
+      .grid, .grid.three { grid-template-columns: 1fr; }
+      .toolbar { right: 14px; bottom: 12px; left: 14px; }
+      .controls button { padding: 9px 10px; font-size: .86rem; }
+      .hint { display: none; }
+      .progress { width: 70px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="presentation" aria-live="polite">
+    <section class="slide center active">
+      <p class="eyebrow">ERC 2027 · praktična delavnica</p>
+      <h1>Git <span class="accent">+</span><br>GitHub</h1>
+      <p class="lead">Za učinkovito skupno delo na projektu. Spremembe delamo ločeno, sledljivo in tako, da jih ekipa lahko varno pregleda in implementira.</p>
+      <div class="big-mark" aria-hidden="true">⌁ ◉ ⌁</div>
+      <span class="tag">Osnove · ekipni potek · skupna vaja v Visual Studio Code</span>
+    </section>
+
+    <section class="slide">
+      <p class="eyebrow">Pregled</p>
+      <h2>Od osnovnega modela do skupne spremembe.</h2>
+      <div class="steps">
+        <div class="step"><span class="n">01</span><div><strong>Git in GitHub</strong><p>Kaj je lokalna zgodovina in kaj pomeni sodelovanje na GitHubu?</p></div></div>
+        <div class="step"><span class="n">02</span><div><strong>Nastavitev</strong><p>Git identiteta in varna prijava v GitHub.</p></div></div>
+        <div class="step"><span class="n">03</span><div><strong>Najpomembnejši ukazi in ekipni flow</strong><p>Pregled, commit, sinhronizacija, poimenovanje vej in PR.</p></div></div>
+        <div class="step"><span class="n">04</span><div><strong>Skupna vaja in izziv</strong><p>Kloniranje, pull, branch, push in PR.</p></div></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <p class="eyebrow">01 · Git in GitHub</p>
+      <h2>Git spremlja lokalne spremembe. GitHub jih poveže z ekipo.</h2>
+      <div class="grid">
+        <article class="card"><h3><span class="accent">Git</span></h3><p>Program za nadzor različic. Na računalniku hrani zgodovino projekta; lahko dela tudi brez interneta.</p></article>
+        <article class="card"><h3><span class="blue">GitHub</span></h3><p>Spletna storitev, kjer gostimo oddaljeni Git repo, pregledujemo spremembe in sodelujemo.</p></article>
+        <article class="card"><h3>Repozitorij</h3><p>Projektne datoteke in zgodovina njihovih sprememb. Lokalni repo je tvoja kopija; GitHub repo je skupna kopija.</p></article>
+        <article class="card"><h3>Commit</h3><p>Lokalno shranjena, poimenovana točka zgodovine. Sporočilo pove namen spremembe.</p></article>
+      </div>
+      <div class="callout">Git in GitHub nista ista stvar. Najprej shraniš commit lokalno; s <code>push</code> ga pošlješ na GitHub, da ga ekipa vidi.</div>
+    </section>
+
+    <section class="slide">
+      <p class="eyebrow">01 · miselni model</p>
+      <h2>Od urejanja do skupne zgodovine.</h2>
+      <div class="flow" aria-label="delovni imenik, pripravljene spremembe, lokalni commiti, GitHub">
+        <span>urejanje</span><b>→</b><span>staging</span><b>→</b><span>commit</span><b>→</b><span>push</span><b>→</b><span>GitHub</span>
+      </div>
+      <div class="grid">
+        <article class="card"><h3>Working directory</h3><p>Delovno okolje z datotekami, ki jih urejaš. Spremembe tu še niso shranjene kot commit.</p></article>
+        <article class="card"><h3>Staging</h3><p>Izbor datotek ali vrstic (sprememb), ki jih želiš vključiti v naslednji commit. Preglej ga.</p></article>
+        <article class="card"><h3>Lokalni commit</h3><p>Točka zgodovine na tvojem računalniku; še ni nujno objavljena na GitHubu. Vedno dodaj vsaj kratek komentar z opisom spremembe za preglednost.</p></article>
+        <article class="card"><h3>Oddaljeni repo</h3><p>Skupna kopija na GitHubu. <code>push</code> pošlje; <code>pull</code> prenese in vključi spremembe.</p></article>
+      </div>
+    </section>
+
+    <section class="slide">
+      <p class="eyebrow">02 · nastavitev pred skupnim delom</p>
+      <h2>Git potrebuje ime avtorja in e-pošto.</h2>
+      <pre>git config --global user.name "Ime ali vzdevek"
+git config --global user.email "tvoj-email@example.com"
+git config --global --list</pre>
+      <div class="grid">
+        <article class="card"><h3>Git identiteta</h3><p>Ime in e-pošta se zapišeta v metapodatke tvojih commitov. Uporabi ime/vzdevek in e-pošto, ki jo želiš povezati z GitHubom.</p></article>
+        <article class="card"><h3>Preveri nastavitev</h3><p>Prvi dve nastavitvi veljata za vse lokalne repozitorije. <code>--global --list</code> pokaže shranjene nastavitve.</p></article>
+      </div>
+      <div class="callout">To ni prijava v GitHub. Za prijavo v VS Code uporabi Accounts → Sign in with GitHub in potrdi prijavo v brskalniku. GitHub gesla ne vpisuj v Git ukaze; za GitHub se prijavi prek brskalnika/credential managerja, ne prek account password prompta.</div>
+    </section>
+
+    <section class="slide">
+      <p class="eyebrow">02 · kloniraj in sinhroniziraj</p>
+      <h2><code>clone</code> naredi kopijo. <code>pull</code> jo osveži.</h2>
+      <pre>git clone &lt;https://github.com/MatijaPI/git-github-delavnica.git&gt;
+cd git-github-delavnica
+git status
+git pull --ff-only origin main</pre>
+      <div class="steps">
+        <div class="step"><span class="n">1</span><div><strong><code>git clone</code></strong><p>Enkrat prenese repo in nastavi povezavo do oddaljenega repozitorija.</p></div></div>
+        <div class="step"><span class="n">2</span><div><strong><code>git status</code></strong><p>Potrdi, da si na pričakovani veji in da nimaš nepričakovanih sprememb.</p></div></div>
+        <div class="step"><span class="n">3</span><div><strong><code>git pull --ff-only origin main</code></strong><p>Osveži lokalni <code>main</code>, kadar ni lokalnih odstopajočih commitov; ob zapletu se ustavi in opozori.</p></div></div>
+      </div>
+      <div class="callout">Pulla ne izvajaj na slepo: najprej poglej <code>git status</code> in preveri trenutno vejo. Pred začetkom naloge uskladi <code>main</code>.</div>
+    </section>
+
+    <section class="slide">
+      <p class="eyebrow">03 · ekipni potek</p>
+      <h2><code>main</code> je skupna osnova. Vsak posamezen task živi v svoji veji.</h2>
+      <pre class="diagram">main       ──●───────────────●─────────────●──→
+              \              ↑ PR + pregled
+feature/ime   └──●────●──────┘</pre>
+      <div class="steps">
+        <div class="step"><span class="n">1</span><div><strong>Osveži osnovo</strong><p>Na <code>main</code> prenesi zadnje spremembe.</p></div></div>
+        <div class="step"><span class="n">2</span><div><strong>Ustvari vejo za nalogo</strong><p>Spremembe pripravljaj ločeno, ne neposredno na <code>main</code>.</p></div></div>
+        <div class="step"><span class="n">3</span><div><strong>Commitaj in push-aj vejo</strong><p>Majhni commiti in pregledan diff olajšajo sodelovanje.</p></div></div>
+        <div class="step"><span class="n">4</span><div><strong>Odpri PR v <code>main</code></strong><p>Ekipa pregleda spremembe in jih po dogovoru združi.</p></div></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <p class="eyebrow">03 · poimenovanje vej</p>
+      <h2>Ime veje naj pove vrsto dela in namen.</h2>
+      <div class="grid">
+        <article class="card"><pre>feature/&lt;podsistem&gt;-&lt;kratka-naloga&gt;
+fix/&lt;podsistem&gt;-&lt;kratka-naloga&gt;
+docs/&lt;tema&gt;-&lt;kratka-naloga&gt;
+test/&lt;podsistem&gt;-&lt;kratka-naloga&gt;</pre>
+        </article>
+        <article class="card">
+          <pre>git switch -c feature/demo</pre>
+          Prej: <pre>git checkout -b feature/demo</pre>
+        </article>
+      </div>
+      
+      <div class="grid">
+        <article class="card"><h3>Primeri</h3><p><code>feature/drive-encoder-check</code><br><code>fix/imu-axis-sign</code><br><code>docs/power-pinout</code><br><code>test/arm-limit-switch</code></p></article>
+        <article class="card"><h3>Skupna pravila</h3><p>Mala angleška tiskana črka, številke ali vezaji; brez presledkov in imen oseb. Ena veja naj predstavlja eno nalogo.</p></article>
+      </div>
+      <div class="callout">Dogovor: <code>tip/podsistem-kratek-opis</code>. Če uporabljamo številke nalog, jih dodamo za tip: <code>feature/42-drive-encoder-check</code>. Ne mešajmo formatov po občutku.</div>
+    </section>
+
+    <section class="slide">
+      <p class="eyebrow">03 · ukazi, ki jih potrebujemo</p>
+      <h2>Najprej preveri spremembe. Nato izberi, shrani in deli.</h2>
+      <div class="grid">
+        <article class="card"><h3><code>git status</code></h3><p>Pokaže trenutno vejo ter spremenjene, pripravljene in nespremljane datoteke. Uporabi ga, ko nisi prepričan, kaj se dogaja ali želiš videti stanje svojega working directoryja.</p></article>
+        <article class="card"><h3><code>git diff</code></h3><p>Prikaže vrstice, spremenjene v že spremljanih datotekah, ki še niso v stagingu.</p></article>
+        <article class="card"><h3><code>git add pot/do/datoteke</code></h3><p>Izbrane spremembe pripravi in vključi v naslednji commit. Ni še objava na GitHubu.</p></article>
+        <article class="card"><h3><code>git diff --staged</code></h3><p>Prikaže točno to, kar bo šlo v commit. Posebej uporabno za nove datoteke.</p></article>
+        <article class="card"><h3><code>git commit -m "Sporočilo"</code></h3><p>Iz staginga naredi lokalni commit. Sporočilo naj opiše spremembe.</p></article>
+        <article class="card"><h3><code>git push</code> / <code>git pull</code></h3><p>Push pošlje commite na oddaljeni repo; pull prenese in vključi oddaljene spremembe v trenutno vejo.</p></article>
+      </div>
+      <div class="callout">Ritem, ki si ga velja zapomniti: <strong>status → diff → add → diff --staged → commit → push</strong>.</div>
+    </section>
+
+    <section class="slide">
+      <p class="eyebrow">03 · pripravi in shrani</p>
+      <h2>Commit vsebuje samo to, kar si izbral.</h2>
+      <pre>git status
+git diff
+git add test.md
+git diff --staged
+git commit -m "Added test.md file"</pre>
+      <div class="grid">
+        <article class="card"><h3>Preglej <code>git diff</code></h3><p>Ali sprememba ustreza namenu? Nova, še nespremljana datoteka tu še ni prikazana.</p></article>
+        <article class="card"><h3>Izberi z <code>git add</code></h3><p>Dodaj samo spremenjene in relevantne datoteke. Izogni se <code>git add .</code>, če nisi pregledal vsega.</p></article>
+        <article class="card"><h3>Preglej staging</h3><p><code>git diff --staged</code> pokaže tudi vsebino nove datoteke, pripravljeno za commit.</p></article>
+        <article class="card"><h3>Napiši uporaben commit</h3><p>Uporabi glagol in predmet: »Changed/added/removed [feature]«, ne samo »fix«.</p></article>
+      </div>
+    </section>
+
+    <section class="slide">
+      <p class="eyebrow">03 · deli spremembo</p>
+      <h2><code>push</code> objavi tvoje commite za ekipo.</h2>
+      <pre># Prva objava nove veje:
+git push -u origin feature/demo
+
+# Nadaljnji commiti na isti veji:
+git push</pre>
+      <div class="grid">
+        <article class="card"><h3><code>origin</code></h3><p>Običajno ime za oddaljeni repo, iz katerega si kloniral.</p></article>
+        <article class="card"><h3><code>-u</code></h3><p>Prvič poveže lokalno vejo z vejo na GitHubu; pozneje lahko uporabiš krajši <code>git push</code>.</p></article>
+      </div>
+      <div class="callout">Commit je lokalen, dokler ne push-aš. Push objavi vejo, ne združi je v <code>main</code>.</div>
+    </section>
+
+    <section class="slide">
+      <p class="eyebrow">03 · pull request in merge</p>
+      <h2><code>PR</code> je zahteva za pregled sprememb in združitev z vejo.</h2>
+      <div class="grid">
+        <article class="card"><span class="number">01</span><h3>Pull request</h3><p>Na GitHubu predlagaš, da se tvoja veja združi v <code>main</code>. Opišeš kaj, zakaj in kako si preveril.</p></article>
+        <article class="card"><span class="number">02</span><h3>Pregled</h3><p>Kolega pogleda diff, postavi vprašanja ali predlaga izboljšave. Popravki na isti veji se pokažejo v istem PR-u.</p></article>
+        <article class="card"><span class="number">03</span><h3>Merge</h3><p>Po dogovorjenem pregledu pooblaščeni član (predlagam vodje ekip) združi vejo v ciljno vejo, običajno <code>main</code>.</p></article>
+        <article class="card"><h3>Po mergeu</h3><p>Vsi osvežijo lokalni <code>main</code> z git pull, preden začnejo naslednjo nalogo.</p></article>
+      </div>
+      <div class="callout">Merge ni samodejni dokaz pravilnosti. Spremembe roverja še vedno zahtevajo ustrezne teste, tehnični pregled in varne postopke.</div>
+    </section>
+
+    <section class="slide">
+      <p class="eyebrow">04 · ustvarjanje pull requesta</p>
+      <h2>Kako odpreti PR na GitHubu.</h2>
+      <div class="steps">
+        <div class="step"><span class="n">1</span><div><strong>Odpri zavihek Pull requests</strong><p>Klikni <strong>New pull request</strong>; po pushu se lahko pokaže tudi <strong>Compare &amp; pull request</strong>.</p></div></div>
+        <div class="step"><span class="n">2</span><div><strong>Izberi veji</strong><p><strong>base</strong> je cilj, običajno <code>main</code>; <strong>compare</strong> je tvoja delovna veja.</p></div></div>
+        <div class="step"><span class="n">3</span><div><strong>Opiši in preglej diff</strong><p>Dodaj jasen naslov in kratek opis ter preveri, da so prikazane samo tvoje spremembe.</p></div></div>
+        <div class="step"><span class="n">4</span><div><strong>Klikni Create pull request</strong><p>PR je odprt za pregled, vendar še ni združen v <code>main</code>.</p></div></div>
+      </div>
+      <div class="callout">Popravke committaj in pushaj na isto vejo; odprti PR se samodejno posodobi.</div>
+    </section>
+
+    <section class="slide">
+      <p class="eyebrow">04 · nagradni izziv</p>
+      <h2>Izziv poišči v datoteki repozitorija.</h2>
+      <p>V korenski mapi odpri zdaj vidno datoteko <code>izziv.md</code>. Rešitev vpiši neposredno v polje <strong>Odgovor</strong> v tej datoteki.</p>
+      <div class="flow"><span>branch</span><b>→</b><span>rešitev</span><b>→</b><span>commit</span><b>→</b><span>push</span><b>→</b><span>PR</span></div>
+      <div class="steps">
+        <div class="step"><span class="n">1</span><div><strong>Ustvari svojo vejo</strong><p>Uporabi <code>izziv/marsovec-vzdevek</code> in unikaten vzdevek.</p></div></div>
+        <div class="step"><span class="n">2</span><div><strong>Zapiši rešitev</strong><p>V svoji veji dopolni samo polje <strong>Odgovor</strong> v <code>izziv.md</code>.</p></div></div>
+        <div class="step"><span class="n">3</span><div><strong>Commitaj in objavi</strong><p>Uporabi ukaze iz README.md na GitHubu, nato ustvari PR v <code>main</code>.</p></div></div>
+      </div>
+      <div class="callout">Ne spreminjaj datotek drugih udeležencev ali skupne veje <code>main</code>. Zmaga prvi pravilno rešen PR po času odprtja. Ker vsi spreminjajo isto vrstico, združimo samo zmagovalni PR; ostale pregledamo in zapremo brez mergea.</div>
+    </section>
+
+    <section class="slide">
+      <p class="eyebrow">04 · zaključek izziva</p>
+      <h2>Rezultati.</h2>
+      <div class="flow"><span>veja</span><b>→</b><span>push</span><b>→</b><span>pull request</span><b>→</b><span>pregled</span><b>→</b><span>merge</span></div>
+      <div class="steps">
+        <div class="step"><span class="n">1</span><div><strong>Odpremo PR</strong><p>Izberemo vejo udeleženca kot source in <code>main</code> kot target; vidimo spremembo.</p></div></div>
+        <div class="step"><span class="n">2</span><div><strong>Pregled spremembe</strong><p>Skupaj si oglejmo diff in kje se podajajo komentarji.</p></div></div>
+        <div class="step"><span class="n">3</span><div><strong>Merge in osveži</strong><p>Združimo PR; posodobite lokalni <code>main</code>.</p></div></div>
+      </div>
+      <div class="callout">Vsak udeleženec odpre PR v <code>main</code>; skupaj pregledamo pravilnost rešitve.</div>
+    </section>
+
+    <section class="slide">
+      <p class="eyebrow">05 · datoteka .gitignore</p>
+      <h2>Git naj spremlja projekt, ne lokalnega nereda ali skrivnosti.</h2>
+      <p>Datoteka <code>.gitignore</code> pove Gitu, katere še nespremljane datoteke naj privzeto prezre. Pravila veljajo za celoten repozitorij ali izbrane mape.</p>
+      <pre># Tipični primeri
+.env  ,  *.log  ,  __pycache__/. ,  .venv/. ,  .DS_Store. ,  build/. ,  dist/</pre>
+      <div class="grid">
+        <article class="card"><h3>Ponavadi ignoriramo</h3><p>Lokalne nastavitve in skrivnosti, loge, začasne datoteke, cache, virtualna okolja in generirane build izhode.</p></article>
+        <article class="card"><h3>Ne skrivaj projektnih virov</h3><p>Ne ignoriraj izvorne kode, dokumentacije, pomembnih konfiguracij ali datotek, potrebnih za ponovitev projekta.</p></article>
+      </div>
+      <div class="callout"><code>.gitignore</code> ne odstrani že spremljanih datotek in ni zaščita za skrivnost, ki je že commitana. Če skrivnost po nesreči objaviš, jo takoj prekliči in obvesti ekipo.</div>
+    </section>
+
+    <section class="slide center">
+      <p class="eyebrow">Povzetek</p>
+      <h2>Git nam omogoča sledenje lokalni zgodovini datotek, GitHub pa olajša sodelovanje v ekipi in pregled posameznih sprememb.</h2>
+      <div class="big-mark" aria-hidden="true">✓</div>
+      <p class="lead"><strong>status → pull → branch → edit → add → diff --staged → commit → push → PR</strong></p>
+      <span class="tag">Če nisi prepričan: preveri stanje in vprašaj ekipo.</span>
+    </section>
+  </main>
+
+  <nav class="toolbar" aria-label="Navigacija predstavitve">
+    <div class="controls">
+      <button id="previous" type="button" aria-label="Prejšnji diapozitiv">← Nazaj</button>
+      <button id="next" type="button" aria-label="Naslednji diapozitiv">Naprej →</button>
+    </div>
+    <span class="hint">← →</span>
+    <div class="progress-wrap" aria-live="polite">
+      <span id="counter">1 / 20</span>
+      <span class="progress" aria-hidden="true"><i id="progress"></i></span>
+    </div>
+  </nav>
+  <script>
+    const slides = [...document.querySelectorAll(".slide")];
+    const counter = document.getElementById("counter");
+    const progress = document.getElementById("progress");
+    let current = 0;
+    function showSlide(index) {
+      current = (index + slides.length) % slides.length;
+      slides.forEach((slide, i) => {
+        slide.classList.toggle("active", i === current);
+        slide.setAttribute("aria-hidden", String(i !== current));
+      });
+      counter.textContent = `${current + 1} / ${slides.length}`;
+      progress.style.width = `${((current + 1) / slides.length) * 100}%`;
+      slides[current].scrollTop = 0;
+    }
+    document.getElementById("previous").addEventListener("click", () => showSlide(current - 1));
+    document.getElementById("next").addEventListener("click", () => showSlide(current + 1));
+    document.addEventListener("keydown", event => {
+      if (event.altKey || event.ctrlKey || event.metaKey) return;
+      if (["ArrowRight", "PageDown", " "].includes(event.key)) {
+        event.preventDefault();
+        showSlide(current + 1);
+      } else if (["ArrowLeft", "PageUp"].includes(event.key)) {
+        event.preventDefault();
+        showSlide(current - 1);
+      } else if (event.key === "Home") {
+        showSlide(0);
+      } else if (event.key === "End") {
+        showSlide(slides.length - 1);
+      }
+    });
+    showSlide(0);
+  </script>
+</body>
+</html>
