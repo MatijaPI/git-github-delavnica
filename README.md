@@ -27,9 +27,27 @@ git pull --ff-only origin main
 
 `clone` prenese repozitorij in nastavi povezavo `origin`. `pull` prenese nove spremembe v trenutno vejo; zato pred njim preveri `git status` in vejo. Po kloniranju preizkusi pull, ko je v `main` objavljena nova skupna sprememba.
 
-## 3. Nagradna vaja · izziv
+## 3. Ukazi na kratko
 
-Odpri datoteko [izziv.md](izziv.md) v korenski mapi repozitorija. Rešitev vpiši neposredno v polje **Odgovor** v tej datoteki. Vsak dela na svoji veji. Ker vsi spreminjate isto polje, po tekmovanju združimo samo zmagovalni PR; ostale pregledamo in zapremo brez mergea, da ne pride do konflikta. Uporabi **unikaten vzdevek** samo z malimi angleškimi črkami, številkami in vezaji, npr. `ana-7`; v spodnjih ukazih zamenjaj `vzdevek` s svojim vzdevkom.
+| Ukaz | Pomen |
+| --- | --- |
+| `git status` | Pokaže trenutno vejo, spremenjene datoteke in kaj je pripravljeno za commit. |
+| `git diff` | Pregleda spremembe spremljanih datotek, ki še niso v stagingu. |
+| `git add <pot>` | Pripravi določeno datoteko za commit. Nove datoteke se pokažejo v `git diff --staged`. |
+| `git diff --staged` | Pregleda točno vsebino naslednjega commita. |
+| `git commit -m "Sporočilo"` | Shrani pripravljene spremembe v lokalno zgodovino. Commit še ni na GitHubu. |
+| `git switch main` | Preklopi na lokalno vejo `main`. |
+| `git pull --ff-only origin main` | Osveži `main`; se ustavi, če Git ne more varno zgolj premakniti veje naprej. |
+| `git switch -c <ime-veje>` | Ustvari in izbere novo vejo iz trenutne veje. |
+| `git checkout -b <ime-veje>` | Ustvari ali zamenja vejo iz trenutne veje. |
+| `git push -u origin <ime-veje>` | Prvič objavi vejo na GitHubu in poveže lokalno vejo z oddaljeno. |
+| `git push` | Pošlje nove commite trenutne povezane veje. |
+
+Delovni ritem: `status → pull → switch -c → uredi → add → diff --staged → commit → push → PR`.
+
+## 4. Nagradna vaja · izziv
+
+Odpri datoteko [izziv.md](izziv.md) v korenski mapi repozitorija. Rešitev vpiši neposredno v polje **Odgovor** v tej datoteki. Vsak dela na svoji veji. Ker vsi spreminjate isto polje, po tekmovanju združimo samo zmagovalni PR; ostale pregledamo in zapremo brez mergea, da ne pride do konflikta. Uporabi **unikaten vzdevek** samo z malimi črkami in številkami, npr. `joze`; v spodnjih ukazih zamenjaj `vzdevek` s svojim vzdevkom.
 
 ```sh
 git switch main
@@ -59,24 +77,6 @@ git push
 ```
 
 PR se bo samodejno posodobil. Zmaga prvi pravilno rešen PR po času odprtja. Ekipa pregleda vse rešitve; združi se samo zmagovalni PR, ostale zapremo brez mergea, ker vsi spreminjajo isto vrstico.
-
-## 4. Ukazi na kratko
-
-| Ukaz | Pomen |
-| --- | --- |
-| `git status` | Pokaže trenutno vejo, spremenjene datoteke in kaj je pripravljeno za commit. |
-| `git diff` | Pregleda spremembe spremljanih datotek, ki še niso v stagingu. |
-| `git add <pot>` | Pripravi določeno datoteko za commit. Nove datoteke se pokažejo v `git diff --staged`. |
-| `git diff --staged` | Pregleda točno vsebino naslednjega commita. |
-| `git commit -m "Sporočilo"` | Shrani pripravljene spremembe v lokalno zgodovino. Commit še ni na GitHubu. |
-| `git switch main` | Preklopi na lokalno vejo `main`. |
-| `git pull --ff-only origin main` | Osveži `main`; se ustavi, če Git ne more varno zgolj premakniti veje naprej. |
-| `git switch -c <ime-veje>` | Ustvari in izbere novo vejo iz trenutne veje. |
-| `git checkout -b <ime-veje>` | Ustvari ali zamenja vejo iz trenutne veje. |
-| `git push -u origin <ime-veje>` | Prvič objavi vejo na GitHubu in poveže lokalno vejo z oddaljeno. |
-| `git push` | Pošlje nove commite trenutne povezane veje. |
-
-Delovni ritem: `status → pull → switch -c → uredi → add → diff --staged → commit → push → PR`.
 
 ## Pravila za veje in varno delo
 
