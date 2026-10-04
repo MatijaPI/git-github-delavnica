@@ -1,10 +1,10 @@
 # Git + GitHub · hitri priročnik za delavnico
 
-Predstavitev: [PREZENTACIJA_GIT_GITHUB.html](PREZENTACIJA_GIT_GITHUB.html) · Izziv: [izziv.md](izziv.md)
+Predstavitev: [Predstavitev-git-github.html](Predstavitev-git-github.html) · Izziv: [izziv.md](izziv.md)
 
 ## 1. Pred prvo uporabo · nastavi Git
 
-Git uporabniško ime in e-pošta sta podpis avtorja commitov; nista GitHub prijava. Uporabi ime ali vzdevek ter e-pošto, ki jo želiš povezati s svojim GitHub profilom.
+Git uporabniško ime in e-pošta sta podpis avtorja commitov; nista GitHub prijava. Uporabi ime ali vzdevek ter e-pošto, ki jo želiš povezati s svojim GitHub profilom. Test
 
 ```sh
 git config --global user.name "Ime ali vzdevek"
