@@ -24,3 +24,5 @@ $$
 **Vprašanje:** Kolikšna je determinanta $\det(A)$ te matrike, ki bo v trenutku in brez plačila odklenila kolesa vašega roverja?
 
 **Odgovor:** 
+
+69 Letsgoo
